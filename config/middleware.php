@@ -3,9 +3,8 @@
 use App\Token;
 
 use Slim\Middleware\JwtAuthentication;
-use Tuupola\Middleware\Cors;
 
-$container["token"] = function ($container) {
+$container["token"] = function () {
     return new Token;
 };
 
@@ -26,17 +25,7 @@ $container["JwtAuthentication"] = function ($container) {
         }
     ]);
 };
-
-$container["Cors"] = function ($container) {
-    return new Cors([
-        "origin" => ["*"],
-        "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
-        "headers.allow" => [],
-        "headers.expose" => [],
-        "credentials" => false,
-        "cache" => 0,
-    ]);
-};
-
 $app->add("JwtAuthentication");
-$app->add("Cors");
+
+
+

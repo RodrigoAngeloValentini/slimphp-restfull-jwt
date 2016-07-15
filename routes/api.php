@@ -1,4 +1,7 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
 use Psr\Http\Message\ServerRequestInterface as ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;

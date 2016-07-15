@@ -1,36 +1,64 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
 use Firebase\JWT\JWT;
 use Tuupola\Base62;
+use Psr\Http\Message\ServerRequestInterface as ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as ResponseInterface;
 
-$app->post("/token", function ($request, $response, $arguments) {
+$app->map(['OPTIONS'], '/[{id}]', function() {
+    echo '';
+});
 
-    $scopes = [
+$app->post("/auth", function (ServerRequestInterface $request, ResponseInterface $response, $arguments) use ($conn){
 
-    ];
+    $post = $request->getParsedBody();
+    $usuario = $post['usuario'];
+    $senha = $post['senha'];
+    $senha = sha1($senha);
 
-    $now = new DateTime();
-    $future = new DateTime("now +2 hours");
+    $qb = $conn->createQueryBuilder();
+    $result = $qb->select('*')
+        ->from('users')
+        ->where('email = ? AND senha = ?')
+        ->setParameter(0,$usuario)
+        ->setParameter(1,$senha)
+        ->execute()
+        ->fetch();
 
-    $jti = Base62::encode(random_bytes(16));
+    if($result){
 
-    $payload = [
-        "iat" => $now->getTimeStamp(),
-        "exp" => $future->getTimeStamp(),
-        "jti" => $jti,
-        "scope" => $scopes
-    ];
+        $now = new DateTime();
+        $future = new DateTime("now +1 hours");
 
-    $secret = $this->secret;
+        $jti = Base62::encode(random_bytes(16));
 
-    $token = JWT::encode($payload, $secret, "HS256");
+        $payload = [
+            "iat" => $now->getTimeStamp(),
+            "exp" => $future->getTimeStamp(),
+            "jti" => $jti,
+            "email" => $result['email']
+        ];
 
-    $data["status"] = "ok";
-    $data["token"] = $token;
+        $secret = $this->secret;
 
-    return $response->withStatus(201)
-        ->withHeader("Content-Type", "application/json")
-        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        $token = JWT::encode($payload, $secret, "HS256");
+
+        $data["status"] = true;
+        $data["token"] = $token;
+        $data["result"] = $result;
+
+        return $response->withStatus(201)->withHeader("Content-Type", "application/json")->write(json_encode($data));
+
+    }else{
+
+        $data["status"] = false;
+        $data["token"] = null;
+
+        return $response->withStatus(200)->withHeader("Content-Type", "application/json")->write(json_encode($data));
+    }
 
 });
 

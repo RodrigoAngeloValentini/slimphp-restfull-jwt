@@ -7,7 +7,7 @@ php composer.phar install
 php -S localhost:8080 -t public/
 
 ### Gerar token (Postman)
-POST em http://localhost:8080/token
+POST em http://localhost:8080/auth
 
 ### Testar Permissão de Acesso (Postman)
 GET em http://localhost:8080/api <br>
