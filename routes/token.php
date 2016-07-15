@@ -20,7 +20,7 @@ $app->post("/auth", function (ServerRequestInterface $request, ResponseInterface
     $senha = sha1($senha);
 
     $qb = $conn->createQueryBuilder();
-    $result = $qb->select('*')
+    $result = $qb->select('email,url')
         ->from('users')
         ->where('email = ? AND senha = ?')
         ->setParameter(0,$usuario)
@@ -39,7 +39,8 @@ $app->post("/auth", function (ServerRequestInterface $request, ResponseInterface
             "iat" => $now->getTimeStamp(),
             "exp" => $future->getTimeStamp(),
             "jti" => $jti,
-            "email" => $result['email']
+            "email" => $result['email'],
+            "url" => $result['url']
         ];
 
         $secret = $this->secret;

@@ -14,7 +14,7 @@ $container["JwtAuthentication"] = function ($container) {
         "passthrough" => ["/token"],
         "secret" => $container['secret'],
         "error" => function ($request, $response, $arguments) {
-            $data["status"] = "error";
+            $data["status"] = false;
             $data["message"] = $arguments["message"];
             return $response
                 ->withHeader("Content-Type", "application/json")

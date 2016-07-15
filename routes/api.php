@@ -6,21 +6,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 use Psr\Http\Message\ServerRequestInterface as ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 
-$app->get("/teste",function(ServerRequestInterface $request, ResponseInterface $response) use($conn){
-
-    $qb = $conn->createQueryBuilder();
-    $result = $qb->select('*')
-        ->from('teste')
-        ->execute()
-        ->fetchAll();
-
-    $response = $response->withHeader('Content-Type', 'application/json');
-    $response->getBody()->write(json_encode($result));
-
-    return $response;
-});
-
-$app->group('/api', function() {
+$app->group('/api', function() use($conn){
 
     $this->get('/', function(ServerRequestInterface $request, ResponseInterface $response){
 
@@ -28,7 +14,20 @@ $app->group('/api', function() {
             ->getBody()->write(
                 json_encode(array('result'=>'OK'))
             );
+    });
 
+    $this->get("/empresa",function(ServerRequestInterface $request, ResponseInterface $response) use($conn){
+
+        $qb = $conn->createQueryBuilder();
+        $result = $qb->select('name,value')
+            ->from('empresas')
+            ->execute()
+            ->fetchAll();
+
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($result));
+
+        return $response;
     });
 
 });
