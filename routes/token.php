@@ -57,7 +57,7 @@ $app->post("/auth", function (ServerRequestInterface $request, ResponseInterface
 
         $data["status"] = false;
         $data["token"] = null;
-
+        $this->logger->write("Login inválido", Silalahi\Slim\Logger::WARN);
         return $response->withStatus(200)->withHeader("Content-Type", "application/json")->write(json_encode($data));
     }
 

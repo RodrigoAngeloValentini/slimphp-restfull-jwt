@@ -10,10 +10,7 @@ $app->group('/api', function() use($conn){
 
     $this->get('/', function(ServerRequestInterface $request, ResponseInterface $response){
 
-        return $response->withHeader('Content-Type', 'application/json')
-            ->getBody()->write(
-                json_encode(array('result'=>'OK'))
-            );
+        return $response->withHeader('Content-Type', 'application/json')->getBody()->write(json_encode(array('result'=>'OK')));
     });
 
     $this->get("/empresa",function(ServerRequestInterface $request, ResponseInterface $response) use($conn){

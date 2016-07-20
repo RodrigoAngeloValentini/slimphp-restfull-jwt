@@ -5,7 +5,8 @@
     "doctrine/dbal":"2.5.2",
     "tuupola/base62": "^0.5.0",
     "firebase/php-jwt": "^3.0",
-    "paragonie/random_compat": "^2.0"
+    "paragonie/random_compat": "^2.0",
+    "silalahi/slim-logger": "dev-master"
   },
   "minimum-stability":"dev",
   "config":{
